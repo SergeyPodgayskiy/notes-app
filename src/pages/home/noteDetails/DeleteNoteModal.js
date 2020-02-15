@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from '../../../components/Modal';
 
-const DeleteNoteModal = ({ handleNoteDelete, noteId, ...props }) => {
+const DeleteNoteModal = ({ handleNoteDelete, ...props }) => {
   return (
     <Modal
       title="Removal of the note"
@@ -14,7 +14,7 @@ const DeleteNoteModal = ({ handleNoteDelete, noteId, ...props }) => {
           <button
             className="btn btn--delete-note"
             onClick={() => {
-              handleNoteDelete(noteId);
+              handleNoteDelete();
               props.handleClose();
             }}
           >

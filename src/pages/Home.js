@@ -18,18 +18,24 @@ const Home = () => {
     return notes;
   };
 
-  const [notes, setNotes] = useState(initNotesStorage());
+  const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
-  const [activeNote, setActiveNote] = useState({});
+  const [activeNote, setActiveNote] = useState(null);
   const [filterText, setFilterText] = useState('');
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    const notes = initNotesStorage();
     const activeNote = notes.find(note => note.isActive === true);
+    setNotes(notes);
     setActiveNote({ ...activeNote });
   }, []);
 
   useEffect(() => {
     console.log('Called every time when notes get mounted and updated');
+    //console.log('Notes:', notes);
+    //console.log('Active Note', activeNote);
     notesStorage.current.setItem('notes', JSON.stringify(notes));
     setFilteredNotes(filterNotes(filterText, notes));
   }, [notes]);
@@ -53,8 +59,11 @@ const Home = () => {
   };
 
   const textareaElement = useRef();
-  useLayoutEffect(() => {
-    textareaElement.current.focus();
+  useEffect(() => {
+    const currentTextareElement = textareaElement.current;
+    if (currentTextareElement) {
+      currentTextareElement.focus();
+    }
   }, [activeNote]);
 
   const handleSetActiveNote = selectedNoteId => {
@@ -73,25 +82,48 @@ const Home = () => {
       details: '',
       isActive: true,
     };
-    let newNotes = [...notes, newNote];
-    newNotes.forEach(note => (note.isActive = note.id === newNote.id));
+    const newNotes = [...notes, newNote];
+    let activeNote = null;
+    newNotes.forEach(note => {
+      const isSelected = note.id === newNote.id;
+      note.isActive = isSelected;
+      activeNote = isSelected ? note : null;
+    });
     setNotes(newNotes);
-    setActiveNote(newNotes.find(note => note.id === newNote.id));
+    setActiveNote(activeNote);
   };
 
-  const handleNoteDetailsChange = (selectedNoteId, text) => {
-    let newNotes = [...notes];
-    let selectedNote = newNotes.find(note => note.id === selectedNoteId);
-    selectedNote.details = text;
-    setNotes(newNotes);
+  const handleNoteDetailsChange = text => {
+    if (activeNote) {
+      activeNote.details = text;
+      const newNotes = [...notes];
+      newNotes.find(note => note.id === activeNote.id).details = text;
+      setNotes(newNotes);
+    }
   };
 
-  const handleNoteDelete = selectedNoteId => {
-    let newNotes = notes
-      .filter(note => note.id !== selectedNoteId)
-      .forEach((note, index) => (note.isActive = index === 0));
-    setNotes(newNotes);
-    setActiveNote(newNotes[0]);
+  const handleNoteDelete = () => {
+    if (activeNote) {
+      const prevNote = notes[notes.indexOf(activeNote) - 1];
+      const newNotes = notes.filter(note => note.id !== activeNote.id);
+
+      if (prevNote) {
+        newNotes.forEach(note => (note.isActive = note.id === prevNote.id));
+        setNotes(newNotes);
+        setActiveNote({ ...prevNote });
+        return;
+      }
+
+      const isFirstElementWasDeleted = !prevNote && newNotes.length > 0;
+      if (isFirstElementWasDeleted) {
+        newNotes.forEach((note, index) => (note.isActive = index === 0));
+        setNotes(newNotes);
+        setActiveNote(newNotes[0]);
+      } else {
+        setNotes([]);
+        setActiveNote(null);
+      }
+    }
   };
 
   return (

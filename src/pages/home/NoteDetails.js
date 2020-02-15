@@ -3,16 +3,16 @@ import NoteActions from './noteDetails/NoteActions';
 import TextareaAutosize from 'react-textarea-autosize';
 
 const NoteDetails = React.forwardRef(({ note, handleNoteDetailsChange, handleNoteDelete }, ref) => {
-  const textarea = useRef();
+  if (!note) return <div>There is no selected note</div>;
 
   return (
     <div className="note-details-container">
-      <NoteActions handleNoteDelete={handleNoteDelete} noteId={note.id} />
+      <NoteActions handleNoteDelete={handleNoteDelete} />
       <TextareaAutosize
         inputRef={innerTextarea => (ref.current = innerTextarea)}
         className="note-details-content"
         value={note.details}
-        onChange={e => handleNoteDetailsChange(note.id, e.target.value)}
+        onChange={e => handleNoteDetailsChange(e.target.value)}
       />
     </div>
   );

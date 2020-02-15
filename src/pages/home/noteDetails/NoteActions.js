@@ -3,7 +3,7 @@ import DeleteNoteModal from './DeleteNoteModal';
 import Portal from '../../../components/Portal';
 import useModalShowState from '../../../components/customHooks/useModalShowState';
 
-const NoteActions = ({ handleNoteDelete, noteId }) => {
+const NoteActions = ({ handleNoteDelete }) => {
   const [show, toggleShow] = useModalShowState(false);
 
   return (
@@ -12,7 +12,7 @@ const NoteActions = ({ handleNoteDelete, noteId }) => {
         <span className="btn__text">Delete</span>
       </button>
       <Portal>
-        <DeleteNoteModal show={show} handleClose={toggleShow} noteId={noteId} handleNoteDelete={handleNoteDelete} />
+        <DeleteNoteModal show={show} handleClose={toggleShow} handleNoteDelete={handleNoteDelete} />
       </Portal>
     </div>
   );
