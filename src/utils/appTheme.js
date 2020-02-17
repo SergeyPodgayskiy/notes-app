@@ -1,4 +1,4 @@
-const appTheme = {
+const AppTheme = {
   blueMode: {
     name: 'blueMode',
     primaryColor: 'rgb(186, 220, 240)',
@@ -11,4 +11,4 @@ const appTheme = {
   },
 };
 
-export default appTheme;
+export default AppTheme;

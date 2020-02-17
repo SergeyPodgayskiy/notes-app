@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Modal from '../../../components/Modal';
 
 const AddNoteModal = ({ handleNoteDetailsAdd, ...props }) => {
@@ -8,7 +8,12 @@ const AddNoteModal = ({ handleNoteDetailsAdd, ...props }) => {
     <Modal
       title="Adding a note"
       body={
-        <form>
+        <form
+          onSubmit={e => {
+            handleNoteDetailsAdd(noteTitle);
+            e.preventDefault();
+          }}
+        >
           <div className="form-group">
             <label htmlFor="note-title" className="col-form-label">
               Title:

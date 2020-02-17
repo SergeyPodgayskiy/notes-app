@@ -1,10 +1,10 @@
 import React, { createContext, useState } from 'react';
-import appTheme from '../utils/appTheme';
+import AppTheme from '../utils/AppTheme';
 
 const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(appTheme['blueMode']);
+  const [theme, setTheme] = useState(AppTheme['blueMode']);
 
   return <ThemeContext.Provider value={[theme, setTheme]}>{children}</ThemeContext.Provider>;
 };

@@ -6,38 +6,42 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { ThemeContext } from '../context/ThemeContext';
 import ErrorBoundary from '../components/errorBoudaries/ErrorBoundary';
+import AsyncNotesStorage from '../utils/AsyncNotesStorage';
 
 const Home = () => {
   const [theme, setTheme] = useContext(ThemeContext);
-  const notesStorage = useRef();
-
-  const initNotesStorage = () => {
-    notesStorage.current = window.localStorage;
-    const notesFromStorage = JSON.parse(notesStorage.current.getItem('notes'));
-    const notes = notesFromStorage && Array.isArray(notesFromStorage) ? notesFromStorage : [];
-    return notes;
-  };
 
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(null);
   const [filterText, setFilterText] = useState('');
-  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const notes = initNotesStorage();
-    const activeNote = notes.find(note => note.isActive === true);
-    setNotes(notes);
-    setActiveNote({ ...activeNote });
+    async function fetchNotes() {
+      const notes = await AsyncNotesStorage.getNotes();
+      return notes;
+    }
+
+    setIsLoading(true);
+    fetchNotes()
+      .then(notes => {
+        const activeNote = notes.find(note => note.isActive === true);
+        setNotes(notes);
+        setFilteredNotes(filterNotes(filterText, notes));
+        setActiveNote(activeNote);
+      })
+      .catch(err => {
+        setError(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   useEffect(() => {
-    console.log('Called every time when notes get mounted and updated');
-    //console.log('Notes:', notes);
-    //console.log('Active Note', activeNote);
-    notesStorage.current.setItem('notes', JSON.stringify(notes));
-    setFilteredNotes(filterNotes(filterText, notes));
+    AsyncNotesStorage.setNotes(notes);
   }, [notes]);
 
   const handleFilterTextChange = filterText => {
@@ -69,6 +73,7 @@ const Home = () => {
   const handleSetActiveNote = selectedNoteId => {
     const newNotes = notes.map(note => ({ ...note, isActive: note.id === selectedNoteId }));
     setNotes(newNotes);
+    setFilteredNotes(filterNotes(filterText, newNotes));
     setActiveNote(newNotes.find(note => note.id === selectedNoteId));
   };
 
@@ -90,6 +95,7 @@ const Home = () => {
       activeNote = isSelected ? note : null;
     });
     setNotes(newNotes);
+    setFilteredNotes(filterNotes(filterText, newNotes));
     setActiveNote(activeNote);
   };
 
@@ -99,6 +105,7 @@ const Home = () => {
       const newNotes = [...notes];
       newNotes.find(note => note.id === activeNote.id).details = text;
       setNotes(newNotes);
+      setFilteredNotes(filterNotes(filterText, newNotes));
     }
   };
 
@@ -110,6 +117,7 @@ const Home = () => {
       if (prevNote) {
         newNotes.forEach(note => (note.isActive = note.id === prevNote.id));
         setNotes(newNotes);
+        setFilteredNotes(filterNotes(filterText, newNotes));
         setActiveNote({ ...prevNote });
         return;
       }
@@ -118,9 +126,11 @@ const Home = () => {
       if (isFirstElementWasDeleted) {
         newNotes.forEach((note, index) => (note.isActive = index === 0));
         setNotes(newNotes);
+        setFilteredNotes(filterNotes(filterText, newNotes));
         setActiveNote(newNotes[0]);
       } else {
         setNotes([]);
+        setFilteredNotes([]);
         setActiveNote(null);
       }
     }
@@ -136,8 +146,15 @@ const Home = () => {
               filterText={filterText}
               onFilterTextChange={handleFilterTextChange}
               handleNoteDetailsAdd={handleNoteDetailsAdd}
+              isLoading={isLoading}
             />
-            <Notes filterText={filterText} notes={filteredNotes} handleSetActiveNote={handleSetActiveNote} />
+            <Notes
+              filterText={filterText}
+              notes={filteredNotes}
+              handleSetActiveNote={handleSetActiveNote}
+              isLoading={isLoading}
+              error={error}
+            />
           </div>
           <div className="right-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
             <NoteDetails

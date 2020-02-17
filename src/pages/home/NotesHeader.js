@@ -4,7 +4,7 @@ import Portal from '../../components/Portal';
 import AddNoteModal from './notesHeader/AddNoteModal';
 import useModalShowState from '../../components/customHooks/useModalShowState';
 
-const NotesHeader = ({ filterText, onFilterTextChange, handleNoteDetailsAdd }) => {
+const NotesHeader = ({ filterText, onFilterTextChange, handleNoteDetailsAdd, isLoading }) => {
   const [show, toggleShow] = useModalShowState(false);
 
   return (
@@ -12,10 +12,10 @@ const NotesHeader = ({ filterText, onFilterTextChange, handleNoteDetailsAdd }) =
       className="notes-header-container"
       onClick={e => console.log('Check bubble from Portal. Clicked on:', e.target)}
     >
-      <button onClick={toggleShow} className="btn btn--add-note">
+      <button onClick={toggleShow} className="btn btn--add-note" disabled={isLoading}>
         <span className="btn__text">Add note</span>
       </button>
-      <FilterBar filterText={filterText} onFilterTextChange={onFilterTextChange} />
+      <FilterBar filterText={filterText} onFilterTextChange={onFilterTextChange} isLoading={isLoading} />
       <Portal>
         <AddNoteModal show={show} handleClose={toggleShow} handleNoteDetailsAdd={handleNoteDetailsAdd} />
       </Portal>
