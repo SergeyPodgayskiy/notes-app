@@ -14,7 +14,7 @@ const Home = () => {
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(null);
-  const [filterText, setFilterText] = useState('sec');
+  const [filterText, setFilterText] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
