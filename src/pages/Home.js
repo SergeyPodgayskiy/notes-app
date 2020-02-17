@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import NotesHeader from './home/NotesHeader';
-import Notes from './home/Notes';
+import NotesList from './home/NotesList';
 import NoteDetails from './home/NoteDetails';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -22,21 +22,20 @@ const Home = () => {
     async function fetchNotes() {
       return await AsyncNotesStorage.getNotes();
     }
-
     setIsLoading(true);
-    fetchNotes()
-      .then(notes => {
-        setNotes(notes);
-        setFilteredNotes(filterNotes(filterText, notes));
-        const activeNote = notes && notes.length > 0 ? notes[0] : null;
-        setActiveNote(activeNote);
-      })
-      .catch(err => {
-        setError(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      fetchNotes()
+          .then(notes => {
+            setNotes(notes);
+            setFilteredNotes(filterNotes(filterText, notes));
+            const activeNote = notes && notes.length > 0 ? notes[0] : null;
+            setActiveNote(activeNote);
+          })
+          .catch(err => {
+            setError(err);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
   }, []);
 
   useEffect(() => {
@@ -136,7 +135,7 @@ const Home = () => {
               handleNoteDetailsAdd={handleNoteDetailsAdd}
               isLoading={isLoading}
             />
-            <Notes
+            <NotesList
               filterText={filterText}
               notes={filteredNotes}
               handleSetActiveNote={handleSetActiveNote}
