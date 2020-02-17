@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext, useRef, useLayoutEffect } from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import NotesHeader from './home/NotesHeader';
 import Notes from './home/Notes';
 import NoteDetails from './home/NoteDetails';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { ThemeContext } from '../context/ThemeContext';
+import {ThemeContext} from '../context/ThemeContext';
 import ErrorBoundary from '../components/errorBoudaries/ErrorBoundary';
 import AsyncNotesStorage from '../utils/AsyncNotesStorage';
 
@@ -14,22 +14,21 @@ const Home = () => {
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(null);
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState('sec');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchNotes() {
-      const notes = await AsyncNotesStorage.getNotes();
-      return notes;
+      return await AsyncNotesStorage.getNotes();
     }
 
     setIsLoading(true);
     fetchNotes()
       .then(notes => {
-        const activeNote = notes.find(note => note.isActive === true);
         setNotes(notes);
         setFilteredNotes(filterNotes(filterText, notes));
+        const activeNote = notes && notes.length > 0 ? notes[0] : null;
         setActiveNote(activeNote);
       })
       .catch(err => {
@@ -71,10 +70,7 @@ const Home = () => {
   }, [activeNote]);
 
   const handleSetActiveNote = selectedNoteId => {
-    const newNotes = notes.map(note => ({ ...note, isActive: note.id === selectedNoteId }));
-    setNotes(newNotes);
-    setFilteredNotes(filterNotes(filterText, newNotes));
-    setActiveNote(newNotes.find(note => note.id === selectedNoteId));
+    setActiveNote({...notes.find(note => note.id === selectedNoteId)});
   };
 
   const handleNoteDetailsAdd = noteTitle => {
@@ -85,18 +81,11 @@ const Home = () => {
       id: Date.now(),
       title: noteTitle.trim(),
       details: '',
-      isActive: true,
     };
     const newNotes = [...notes, newNote];
-    let activeNote = null;
-    newNotes.forEach(note => {
-      const isSelected = note.id === newNote.id;
-      note.isActive = isSelected;
-      activeNote = isSelected ? note : null;
-    });
     setNotes(newNotes);
     setFilteredNotes(filterNotes(filterText, newNotes));
-    setActiveNote(activeNote);
+    setActiveNote(newNote);
   };
 
   const handleNoteDetailsChange = text => {
@@ -111,11 +100,11 @@ const Home = () => {
 
   const handleNoteDelete = () => {
     if (activeNote) {
-      const prevNote = notes[notes.indexOf(activeNote) - 1];
-      const newNotes = notes.filter(note => note.id !== activeNote.id);
+      const activeNoteAmongNotes = notes.find(note => note.id === activeNote.id);
+      const prevNote = notes[notes.indexOf(activeNoteAmongNotes) - 1];
+      const newNotes = notes.filter(note => note.id !== activeNoteAmongNotes.id);
 
       if (prevNote) {
-        newNotes.forEach(note => (note.isActive = note.id === prevNote.id));
         setNotes(newNotes);
         setFilteredNotes(filterNotes(filterText, newNotes));
         setActiveNote({ ...prevNote });
@@ -124,7 +113,6 @@ const Home = () => {
 
       const isFirstElementWasDeleted = !prevNote && newNotes.length > 0;
       if (isFirstElementWasDeleted) {
-        newNotes.forEach((note, index) => (note.isActive = index === 0));
         setNotes(newNotes);
         setFilteredNotes(filterNotes(filterText, newNotes));
         setActiveNote(newNotes[0]);
@@ -154,6 +142,7 @@ const Home = () => {
               handleSetActiveNote={handleSetActiveNote}
               isLoading={isLoading}
               error={error}
+              activeNote={activeNote}
             />
           </div>
           <div className="right-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
