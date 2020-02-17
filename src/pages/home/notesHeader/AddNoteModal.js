@@ -11,7 +11,8 @@ const AddNoteModal = ({ handleNoteDetailsAdd, ...props }) => {
         <form
           onSubmit={e => {
             handleNoteDetailsAdd(noteTitle);
-            e.preventDefault();
+              props.handleClose();
+              e.preventDefault();
           }}
         >
           <div className="form-group">
