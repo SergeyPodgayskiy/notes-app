@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FilterBar from './notesHeader/FilterBar';
 import Portal from '../../components/Portal';
 import AddNoteModal from './notesHeader/AddNoteModal';
-import useModalShowState from '../../components/customHooks/useModalShowState';
+import useModalShowState from '../../components/hooks/useModalShowState';
 
 const NotesHeader = ({ filterText, onFilterTextChange, handleNoteDetailsAdd, isLoading }) => {
   const [show, toggleShow] = useModalShowState(false);

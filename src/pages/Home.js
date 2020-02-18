@@ -1,79 +1,51 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import NotesHeader from './home/NotesHeader';
 import NotesList from './home/NotesList';
 import NoteDetails from './home/NoteDetails';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import {ThemeContext} from '../context/ThemeContext';
+import { ThemeContext } from '../context/ThemeContext';
 import ErrorBoundary from '../components/errorBoudaries/ErrorBoundary';
 import AsyncNotesStorage from '../utils/AsyncNotesStorage';
+import useNotesStorage from '../components/hooks/useNotesStorage';
+import { filterNotes, defineActiveNote } from '../utils/NotesUtil';
 
 const Home = () => {
   const [theme, setTheme] = useContext(ThemeContext);
-
-  const [notes, setNotes] = useState([]);
+  const [notes, isLoading, error] = useNotesStorage();
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(null);
   const [filterText, setFilterText] = useState('');
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const textareaElement = useRef();
 
   useEffect(() => {
-    async function fetchNotes() {
-      return await AsyncNotesStorage.getNotes();
+    if (notes) {
+      AsyncNotesStorage.saveNotes(notes);
+      setFilteredNotes(filterNotes(filterText, notes));
+      setActiveNote(defineActiveNote(notes));
     }
-    setIsLoading(true);
-      fetchNotes()
-          .then(notes => {
-            setNotes(notes);
-            setFilteredNotes(filterNotes(filterText, notes));
-            const activeNote = notes && notes.length > 0 ? notes[0] : null;
-            setActiveNote(activeNote);
-          })
-          .catch(err => {
-            setError(err);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-  }, []);
-
-  useEffect(() => {
-    AsyncNotesStorage.setNotes(notes);
   }, [notes]);
 
-  const handleFilterTextChange = filterText => {
-    //TODO: add validation
-    setFilterText(filterText);
-    const updatedFilteredNotes = filterNotes(filterText, notes);
-    setFilteredNotes(updatedFilteredNotes);
-  };
-
-  const filterNotes = (filterText, notes) => {
-    const processedFilteredText = filterText.trim().toLowerCase();
-
-    if (processedFilteredText === '') return notes;
-
-    return filteredNotes.filter(note => {
-      const processedTitle = note.title.trim().toLowerCase();
-      return processedTitle.includes(processedFilteredText);
-    });
-  };
-
-  const textareaElement = useRef();
   useEffect(() => {
-    const currentTextareElement = textareaElement.current;
-    if (currentTextareElement) {
-      currentTextareElement.focus();
+    const currentTextareaElement = textareaElement.current;
+
+    if (currentTextareaElement) {
+      currentTextareaElement.focus();
     }
   }, [activeNote]);
 
+  const handleFilterTextChange = text => {
+    // TODO: add validation
+    setFilterText(filterText);
+    setFilteredNotes(filterNotes(text, notes));
+  };
+
   const handleSetActiveNote = selectedNoteId => {
-    setActiveNote({...notes.find(note => note.id === selectedNoteId)});
+    setActiveNote({ ...notes.find(note => note.id === selectedNoteId) });
   };
 
   const handleNoteDetailsAdd = noteTitle => {
-    //TODO: add validation
+    // TODO: add validation
     if (!noteTitle) return;
 
     let newNote = {
@@ -82,7 +54,7 @@ const Home = () => {
       details: '',
     };
     const newNotes = [...notes, newNote];
-    setNotes(newNotes);
+    // setNotes(newNotes);
     setFilteredNotes(filterNotes(filterText, newNotes));
     setActiveNote(newNote);
   };
@@ -92,19 +64,19 @@ const Home = () => {
       activeNote.details = text;
       const newNotes = [...notes];
       newNotes.find(note => note.id === activeNote.id).details = text;
-      setNotes(newNotes);
+      // setNotes(newNotes);
       setFilteredNotes(filterNotes(filterText, newNotes));
     }
   };
 
   const handleNoteDelete = () => {
     if (activeNote) {
-      const activeNoteAmongNotes = notes.find(note => note.id === activeNote.id);
+      const activeNoteAmongNotes = defineActiveNote(notes, activeNote.id);
       const prevNote = notes[notes.indexOf(activeNoteAmongNotes) - 1];
       const newNotes = notes.filter(note => note.id !== activeNoteAmongNotes.id);
 
       if (prevNote) {
-        setNotes(newNotes);
+        // setNotes(newNotes);
         setFilteredNotes(filterNotes(filterText, newNotes));
         setActiveNote({ ...prevNote });
         return;
@@ -112,11 +84,11 @@ const Home = () => {
 
       const isFirstElementWasDeleted = !prevNote && newNotes.length > 0;
       if (isFirstElementWasDeleted) {
-        setNotes(newNotes);
+        // setNotes(newNotes);
         setFilteredNotes(filterNotes(filterText, newNotes));
         setActiveNote(newNotes[0]);
       } else {
-        setNotes([]);
+        // setNotes([]);
         setFilteredNotes([]);
         setActiveNote(null);
       }

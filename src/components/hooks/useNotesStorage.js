@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import AsyncNotesStorage from '../../utils/AsyncNotesStorage';
 // TODO: implement custom hook and thus decouple b-logic from UI
-const useNotesFromStorage = () => {
-  const [notes, setNotes] = useState([]);
+
+const useNotesStorage = (fetchDeps = []) => {
+  const [notes, setNotes] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -11,8 +13,8 @@ const useNotesFromStorage = () => {
       setError(null);
 
       try {
-        const notes = await AsyncNotesStorage.getNotes();
-        setNotes(notes);
+        const fetchedNotes = await AsyncNotesStorage.fetchNotes();
+        setNotes(fetchedNotes);
       } catch (err) {
         setError(err);
       } finally {
@@ -20,7 +22,13 @@ const useNotesFromStorage = () => {
       }
     };
     fetchNotes();
-  }, []);
+  }, fetchDeps);
+
+  useEffect(() => {
+    AsyncNotesStorage.saveNotes(notes);
+  }, [notes]);
 
   return [notes, isLoading, error];
 };
+
+export default useNotesStorage;

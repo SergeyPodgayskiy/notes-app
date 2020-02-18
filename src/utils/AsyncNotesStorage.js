@@ -1,5 +1,5 @@
 const AsyncNotesStorage = {
-  getNotes() {
+  fetchNotes() {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         let notes = JSON.parse(window.localStorage.getItem('notes'));
@@ -9,12 +9,12 @@ const AsyncNotesStorage = {
     });
   },
 
-  setNotes(notes) {
+  saveNotes(notes) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         window.localStorage.setItem('notes', JSON.stringify(notes));
         resolve();
-      }, 1000);
+      }, 0);
     });
   },
 };

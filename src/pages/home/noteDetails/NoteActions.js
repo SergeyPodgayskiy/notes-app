@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DeleteNoteModal from './DeleteNoteModal';
 import Portal from '../../../components/Portal';
-import useModalShowState from '../../../components/customHooks/useModalShowState';
+import useModalShowState from '../../../components/hooks/useModalShowState';
 
 const NoteActions = ({ handleNoteDelete }) => {
   const [show, toggleShow] = useModalShowState(false);
