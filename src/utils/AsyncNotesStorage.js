@@ -9,11 +9,11 @@ const AsyncNotesStorage = {
     });
   },
 
-  saveNotes(notes) {
+  updateNotes(notes) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         window.localStorage.setItem('notes', JSON.stringify(notes));
-        resolve();
+        resolve([...notes]);
       }, 0);
     });
   },

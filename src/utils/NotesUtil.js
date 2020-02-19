@@ -1,10 +1,10 @@
-export const filterNotes = (filterText, notesToFilter) => {
-  const processedFilteredText = filterText.trim().toLowerCase();
+export const filterNotes = (filterTerm, notesToFilter) => {
+  const processedFilteredText = filterTerm.toLowerCase().trim();
 
   if (processedFilteredText === '') return notesToFilter;
 
   const filteredNotes = notesToFilter.filter(note => {
-    const processedTitle = note.title.trim().toLowerCase();
+    const processedTitle = note.title.toLowerCase();
     return processedTitle.includes(processedFilteredText);
   });
 

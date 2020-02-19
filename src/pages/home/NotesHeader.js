@@ -4,7 +4,7 @@ import Portal from '../../components/Portal';
 import AddNoteModal from './notesHeader/AddNoteModal';
 import useModalShowState from '../../components/hooks/useModalShowState';
 
-const NotesHeader = ({ filterText, onFilterTextChange, handleNoteDetailsAdd, isLoading }) => {
+const NotesHeader = ({ filterTerm, onFilterTermChange, handleNoteDetailsAdd, isLoading }) => {
   const [show, toggleShow] = useModalShowState(false);
 
   return (
@@ -15,7 +15,7 @@ const NotesHeader = ({ filterText, onFilterTextChange, handleNoteDetailsAdd, isL
       <button onClick={toggleShow} className="btn btn--add-note" disabled={isLoading}>
         <span className="btn__text">Add note</span>
       </button>
-      <FilterBar filterText={filterText} onFilterTextChange={onFilterTextChange} isLoading={isLoading} />
+      <FilterBar filterTerm={filterTerm} onFilterTermChange={onFilterTermChange} isLoading={isLoading} />
       <Portal>
         <AddNoteModal show={show} handleClose={toggleShow} handleNoteDetailsAdd={handleNoteDetailsAdd} />
       </Portal>

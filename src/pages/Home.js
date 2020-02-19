@@ -6,23 +6,21 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { ThemeContext } from '../context/ThemeContext';
 import ErrorBoundary from '../components/errorBoudaries/ErrorBoundary';
-import AsyncNotesStorage from '../utils/AsyncNotesStorage';
 import useNotesStorage from '../components/hooks/useNotesStorage';
 import { filterNotes, defineActiveNote } from '../utils/NotesUtil';
 
 const Home = () => {
   const [theme, setTheme] = useContext(ThemeContext);
-  const [notes, isLoading, error] = useNotesStorage();
-  const [filteredNotes, setFilteredNotes] = useState([]);
+  const [notes, setNotes, isLoading, error] = useNotesStorage();
   const [activeNote, setActiveNote] = useState(null);
-  const [filterText, setFilterText] = useState('');
+  const [filterTerm, setFilterTerm] = useState('');
   const textareaElement = useRef();
 
   useEffect(() => {
     if (notes) {
-      AsyncNotesStorage.saveNotes(notes);
-      setFilteredNotes(filterNotes(filterText, notes));
-      setActiveNote(defineActiveNote(notes));
+      if (!activeNote) {
+        setActiveNote(defineActiveNote(notes));
+      }
     }
   }, [notes]);
 
@@ -34,28 +32,26 @@ const Home = () => {
     }
   }, [activeNote]);
 
-  const handleFilterTextChange = text => {
+  const handleFilterTermChange = term => {
     // TODO: add validation
-    setFilterText(filterText);
-    setFilteredNotes(filterNotes(text, notes));
+    setFilterTerm(term);
   };
 
   const handleSetActiveNote = selectedNoteId => {
-    setActiveNote({ ...notes.find(note => note.id === selectedNoteId) });
+    setActiveNote(defineActiveNote(notes, selectedNoteId));
   };
 
   const handleNoteDetailsAdd = noteTitle => {
     // TODO: add validation
     if (!noteTitle) return;
 
-    let newNote = {
+    const newNote = {
       id: Date.now(),
       title: noteTitle.trim(),
       details: '',
     };
     const newNotes = [...notes, newNote];
-    // setNotes(newNotes);
-    setFilteredNotes(filterNotes(filterText, newNotes));
+    setNotes(newNotes);
     setActiveNote(newNote);
   };
 
@@ -64,8 +60,7 @@ const Home = () => {
       activeNote.details = text;
       const newNotes = [...notes];
       newNotes.find(note => note.id === activeNote.id).details = text;
-      // setNotes(newNotes);
-      setFilteredNotes(filterNotes(filterText, newNotes));
+      setNotes(newNotes);
     }
   };
 
@@ -76,24 +71,23 @@ const Home = () => {
       const newNotes = notes.filter(note => note.id !== activeNoteAmongNotes.id);
 
       if (prevNote) {
-        // setNotes(newNotes);
-        setFilteredNotes(filterNotes(filterText, newNotes));
+        setNotes(newNotes);
         setActiveNote({ ...prevNote });
         return;
       }
 
       const isFirstElementWasDeleted = !prevNote && newNotes.length > 0;
       if (isFirstElementWasDeleted) {
-        // setNotes(newNotes);
-        setFilteredNotes(filterNotes(filterText, newNotes));
+        setNotes(newNotes);
         setActiveNote(newNotes[0]);
       } else {
-        // setNotes([]);
-        setFilteredNotes([]);
+        setNotes(null);
         setActiveNote(null);
       }
     }
   };
+
+  const filteredNotes = filterNotes(filterTerm, notes);
 
   return (
     <div className="container">
@@ -102,13 +96,12 @@ const Home = () => {
         <main className="main-notes-container">
           <div className="left-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
             <NotesHeader
-              filterText={filterText}
-              onFilterTextChange={handleFilterTextChange}
+              filterTerm={filterTerm}
+              onFilterTermChange={handleFilterTermChange}
               handleNoteDetailsAdd={handleNoteDetailsAdd}
               isLoading={isLoading}
             />
             <NotesList
-              filterText={filterText}
               notes={filteredNotes}
               handleSetActiveNote={handleSetActiveNote}
               isLoading={isLoading}

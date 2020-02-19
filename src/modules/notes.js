@@ -46,6 +46,6 @@ export function fetchNotes() {
 export function addNote(note) {
   return async dispatch => {
     dispatch({ type: 'notes.adding' });
-    await AsyncNotesStorage.saveNotes();
+    await AsyncNotesStorage.updateNotes();
   };
 }
