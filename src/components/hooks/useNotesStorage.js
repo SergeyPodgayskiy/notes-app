@@ -27,7 +27,7 @@ const useNotesStorage = (fetchDeps = []) => {
   useEffect(() => {
     try {
       if (notes) {
-        AsyncNotesStorage.updateNotes(notes);
+        AsyncNotesStorage.persistNotes(notes);
       }
     } catch (err) {
       setError(new Error('Failed to save the notes. Please try again.'));

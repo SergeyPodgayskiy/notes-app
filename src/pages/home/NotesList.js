@@ -4,7 +4,7 @@ import NoteItem from './notesList/NoteItem';
 const NotesList = ({ notes, handleSetActiveNote, isLoading, error, activeNote }) => {
   if (isLoading) return <div>Fetching notes. . . </div>;
 
-  if (error) return <div>{error}</div>;
+  if (error) return <div>{error.message}</div>;
 
   const nonEmptyNotesList = notes && notes.length > 0;
   const notesElements = nonEmptyNotesList
