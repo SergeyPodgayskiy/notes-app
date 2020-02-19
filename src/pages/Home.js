@@ -66,7 +66,7 @@ const Home = () => {
 
   const handleNoteDelete = () => {
     if (activeNote) {
-      const activeNoteAmongNotes = defineActiveNote(notes, activeNote.id);
+      const activeNoteAmongNotes = notes.find(note => note.id === activeNote.id);
       const prevNote = notes[notes.indexOf(activeNoteAmongNotes) - 1];
       const newNotes = notes.filter(note => note.id !== activeNoteAmongNotes.id);
 
