@@ -1,5 +1,5 @@
 import AsyncNotesStorage from '../utils/AsyncNotesStorage';
-
+// TODO: implement reducer
 export default function reducer(state = {}, action) {
   switch (action.type) {
     case 'notes.fetching':
@@ -46,6 +46,6 @@ export function fetchNotes() {
 export function addNote(note) {
   return async dispatch => {
     dispatch({ type: 'notes.adding' });
-    await AsyncNotesStorage.updateNotes();
+    await AsyncNotesStorage.persistNotes();
   };
 }

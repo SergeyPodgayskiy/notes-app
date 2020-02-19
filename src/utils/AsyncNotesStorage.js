@@ -9,7 +9,7 @@ const AsyncNotesStorage = {
     });
   },
 
-  updateNotes(notes) {
+  persistNotes(notes) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         window.localStorage.setItem('notes', JSON.stringify(notes));

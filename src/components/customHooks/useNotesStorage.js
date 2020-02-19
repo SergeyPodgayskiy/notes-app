@@ -12,7 +12,7 @@ const useNotesStorage = () => {
       setError(null);
 
       try {
-        const fetchedNotes = await AsyncNotesStorage.getNotes();
+        const fetchedNotes = await AsyncNotesStorage.fetchNotes();
         setNotes(fetchedNotes);
       } catch (err) {
         setError(new Error('Failed to fetch notes. Please try to reload the page.'));
@@ -26,7 +26,7 @@ const useNotesStorage = () => {
   useEffect(() => {
     try {
       if (notes) {
-        AsyncNotesStorage.setNotes(notes);
+        AsyncNotesStorage.persistNotes(notes);
       }
     } catch (err) {
       setError(new Error('Failed to store notes. Please try again.'));
