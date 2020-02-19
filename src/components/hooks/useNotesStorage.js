@@ -1,40 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
 import AsyncNotesStorage from '../../utils/AsyncNotesStorage';
-// TODO: implement custom hook and thus decouple b-logic from UI
+import notesReducer from '../../modules/notes';
 
-const useNotesStorage = (fetchDeps = []) => {
-  const [notes, setNotes] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+const initialState = {
+  notes: null,
+  isLoading: false,
+  error: null,
+};
+
+const useNotesStorage = () => {
+  const [state, dispatch] = useReducer(notesReducer, initialState);
+  const { notes, isLoading, error } = state;
 
   useEffect(() => {
     const fetchNotes = async () => {
-      setIsLoading(true);
-      setError(null);
-
+      dispatch(['notes.fetching']);
       try {
         const fetchedNotes = await AsyncNotesStorage.fetchNotes();
-        setNotes(fetchedNotes);
+        dispatch(['notes.fetchSuccess', { notes: fetchedNotes }]);
       } catch (err) {
-        setError(new Error('Failed to fetch the notes. Please try to reload the page.'));
-      } finally {
-        setIsLoading(false);
+        dispatch(['notes.fetchFail', { error: new Error('Failed to fetch notes. Please try to reload the page.') }]);
       }
     };
     fetchNotes();
-  }, fetchDeps);
+  }, []);
 
-  useEffect(() => {
+  const persistNotes = async notesToPersist => {
     try {
-      if (notes) {
-        AsyncNotesStorage.persistNotes(notes);
-      }
+      await AsyncNotesStorage.persistNotes(notesToPersist);
+      dispatch(['notes.persistSuccess', { notes: notesToPersist }]);
     } catch (err) {
-      setError(new Error('Failed to save the notes. Please try again.'));
+      dispatch(['notes.persistFail', { error: new Error('Failed to store notes. Please try again.') }]);
     }
-  }, [notes]);
+  };
 
-  return [notes, setNotes, isLoading, error];
+  return [notes, persistNotes, isLoading, error];
 };
 
 export default useNotesStorage;

@@ -1,9 +1,9 @@
 import React from 'react';
 
 const NoteItem = ({ value: note, activeNote, handleSetActiveNote }) => {
-  if (!note && !activeNote) return null;
+  if (!note) return null;
 
-  const isActive = note.id === activeNote.id;
+  const isActive = note.id === (activeNote && activeNote.id);
 
   return (
     <li className={`note-preview ${isActive ? 'active' : ''}`} onClick={e => handleSetActiveNote(note.id)}>

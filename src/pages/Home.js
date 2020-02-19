@@ -5,7 +5,6 @@ import NoteDetails from './home/NoteDetails';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { ThemeContext } from '../context/ThemeContext';
-import ErrorBoundary from '../components/errorBoudaries/ErrorBoundary';
 import useNotesStorage from '../components/hooks/useNotesStorage';
 import { filterNotes, defineActiveNote } from '../utils/NotesUtil';
 
@@ -16,11 +15,13 @@ const Home = () => {
   const [filterTerm, setFilterTerm] = useState('');
   const textareaElement = useRef();
 
+  const filteredNotes = filterNotes(filterTerm, notes);
+
   useEffect(() => {
-    if (notes) {
-      if (!activeNote) {
-        setActiveNote(defineActiveNote(notes));
-      }
+    if (!notes) return setActiveNote(null);
+
+    if (!activeNote) {
+      setActiveNote(defineActiveNote(notes));
     }
   }, [notes]);
 
@@ -35,6 +36,7 @@ const Home = () => {
   const handleFilterTermChange = term => {
     // TODO: add validation
     setFilterTerm(term);
+    setActiveNote(null);
   };
 
   const handleSetActiveNote = selectedNoteId => {
@@ -87,38 +89,34 @@ const Home = () => {
     }
   };
 
-  const filteredNotes = filterNotes(filterTerm, notes);
-
   return (
     <div className="container">
       <Header />
-      <ErrorBoundary>
-        <main className="main-notes-container">
-          <div className="left-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
-            <NotesHeader
-              filterTerm={filterTerm}
-              onFilterTermChange={handleFilterTermChange}
-              handleNoteDetailsAdd={handleNoteDetailsAdd}
-              isLoading={isLoading}
-            />
-            <NotesList
-              notes={filteredNotes}
-              handleSetActiveNote={handleSetActiveNote}
-              isLoading={isLoading}
-              error={error}
-              activeNote={activeNote}
-            />
-          </div>
-          <div className="right-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
-            <NoteDetails
-              note={activeNote}
-              handleNoteDetailsChange={handleNoteDetailsChange}
-              handleNoteDelete={handleNoteDelete}
-              ref={textareaElement}
-            />
-          </div>
-        </main>
-      </ErrorBoundary>
+      <main className="main-notes-container">
+        <div className="left-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
+          <NotesHeader
+            filterTerm={filterTerm}
+            onFilterTermChange={handleFilterTermChange}
+            handleNoteDetailsAdd={handleNoteDetailsAdd}
+            isLoading={isLoading}
+          />
+          <NotesList
+            notes={filteredNotes}
+            handleSetActiveNote={handleSetActiveNote}
+            isLoading={isLoading}
+            error={error}
+            activeNote={activeNote}
+          />
+        </div>
+        <div className="right-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
+          <NoteDetails
+            note={activeNote}
+            handleNoteDetailsChange={handleNoteDetailsChange}
+            handleNoteDelete={handleNoteDelete}
+            ref={textareaElement}
+          />
+        </div>
+      </main>
       <Footer />
     </div>
   );

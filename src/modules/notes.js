@@ -1,7 +1,11 @@
-import AsyncNotesStorage from '../utils/AsyncNotesStorage';
-// TODO: implement reducer
-export default function reducer(state = {}, action) {
-  switch (action.type) {
+const initialState = {
+  notes: null,
+  isLoading: false,
+  error: null,
+};
+
+function reducer(state = initialState, [type, payload]) {
+  switch (type) {
     case 'notes.fetching':
       return {
         ...state,
@@ -10,42 +14,32 @@ export default function reducer(state = {}, action) {
       };
     case 'notes.fetchSuccess':
       return {
-        ...state,
+        notes: [...payload.notes],
         isLoading: false,
         error: null,
       };
-    case 'notes.fetchFailure':
+    case 'notes.fetchFail':
       return {
         ...state,
         isLoading: false,
+        error: { ...payload.error },
       };
-    case 'notes.adding':
-      return {};
-    case 'notes.addSuccess':
-      return {};
-    case 'notes.addFailure':
-      return {};
+    case 'notes.persistSuccess':
+      console.log('reducer', payload);
+      return {
+        notes: [...payload.notes],
+        isLoading: false,
+        error: null,
+      };
+    case 'notes.persistFail':
+      return {
+        ...state,
+        isLoading: false,
+        error: { ...payload.error },
+      };
     default:
-      return state;
+      throw new Error();
   }
 }
 
-// actions
-export function fetchNotes() {
-  return async dispatch => {
-    dispatch({ type: 'notes.fetching' });
-    try {
-      const notes = await AsyncNotesStorage.fetchNotes();
-      dispatch({ type: 'notes.fetchSuccess', notes });
-    } catch (error) {
-      dispatch({ type: 'notes.fetchFailure', error });
-    }
-  };
-}
-
-export function addNote(note) {
-  return async dispatch => {
-    dispatch({ type: 'notes.adding' });
-    await AsyncNotesStorage.persistNotes();
-  };
-}
+export default reducer;

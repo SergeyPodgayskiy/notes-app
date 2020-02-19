@@ -1,13 +1,14 @@
 export const filterNotes = (filterTerm, notesToFilter) => {
+  console.log('pre', filterTerm, notesToFilter);
   const processedFilteredText = filterTerm.toLowerCase().trim();
 
-  if (processedFilteredText === '') return notesToFilter;
+  if (processedFilteredText === '' || !notesToFilter) return notesToFilter;
 
   const filteredNotes = notesToFilter.filter(note => {
     const processedTitle = note.title.toLowerCase();
     return processedTitle.includes(processedFilteredText);
   });
-
+  console.log('filteredNotes', filteredNotes);
   return filteredNotes;
 };
 

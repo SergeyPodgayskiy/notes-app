@@ -3,7 +3,7 @@ import NoteActions from './noteDetails/NoteActions';
 import TextareaAutosize from 'react-textarea-autosize';
 
 const NoteDetails = React.forwardRef(({ note, handleNoteDetailsChange, handleNoteDelete }, ref) => {
-  if (!note) return <div>There is no selected note</div>;
+  if (!note) return <div style={{ marginTop: '25%' }}>There is no selected note</div>;
 
   return (
     <div className="note-details-container">
