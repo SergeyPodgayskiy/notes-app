@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import AppTheme from '../utils/AppTheme';
+import appTheme from '../utils/appTheme';
 import { ThemeContext } from '../context/ThemeContext';
 
 const ThemeToggler = () => {
@@ -7,7 +7,7 @@ const ThemeToggler = () => {
 
   const handleSelectThemeMode = e => {
     const themeName = e.target.value;
-    const theme = AppTheme[themeName];
+    const theme = appTheme[themeName];
 
     if (!theme) return;
     setThemeMode(theme);
@@ -15,8 +15,8 @@ const ThemeToggler = () => {
 
   return (
     <select value={themeMode.name} onChange={handleSelectThemeMode}>
-      {Object.keys(AppTheme).map(themeName => {
-        const theme = AppTheme[themeName];
+      {Object.keys(appTheme).map(themeName => {
+        const theme = appTheme[themeName];
         return (
           <option key={theme.name} value={theme.name}>
             {theme.name}

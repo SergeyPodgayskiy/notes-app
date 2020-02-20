@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 import ThemeToggler from './ThemeToggler';
 import { ThemeContext } from '../context/ThemeContext';
 
-//TODO: add Logo and routing Links
 const Header = () => {
   const [theme, setTheme] = useContext(ThemeContext);
 
@@ -13,10 +13,14 @@ const Header = () => {
       <nav>
         <ul className="navigation">
           <li>
-            <a href="#">Notes</a>
+            <NavLink exact activeStyle={{ color: 'red' }} to="/">
+              Notes
+            </NavLink>
           </li>
           <li>
-            <a href="#">About</a>
+            <NavLink activeStyle={{ color: 'red' }} to="/about">
+              About
+            </NavLink>
           </li>
         </ul>
       </nav>

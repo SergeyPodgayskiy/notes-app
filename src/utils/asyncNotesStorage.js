@@ -1,4 +1,4 @@
-const AsyncNotesStorage = {
+const asyncNotesStorage = {
   fetchNotes() {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -19,4 +19,4 @@ const AsyncNotesStorage = {
   },
 };
 
-export default AsyncNotesStorage;
+export default asyncNotesStorage;

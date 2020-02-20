@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import AsyncNotesStorage from '../../utils/AsyncNotesStorage';
+import asyncNotesStorage from '../../utils/asyncNotesStorage';
 import notesReducer from '../../modules/notes';
 
 const initialState = {
@@ -16,7 +16,7 @@ const useNotesStorage = () => {
     const fetchNotes = async () => {
       dispatch(['notes.fetching']);
       try {
-        const fetchedNotes = await AsyncNotesStorage.fetchNotes();
+        const fetchedNotes = await asyncNotesStorage.fetchNotes();
         dispatch(['notes.fetchSuccess', { notes: fetchedNotes }]);
       } catch (err) {
         dispatch(['notes.fetchFail', { error: new Error('Failed to fetch notes. Please try to reload the page.') }]);
@@ -27,7 +27,7 @@ const useNotesStorage = () => {
 
   const persistNotes = async notesToPersist => {
     try {
-      await AsyncNotesStorage.persistNotes(notesToPersist);
+      await asyncNotesStorage.persistNotes(notesToPersist);
       dispatch(['notes.persistSuccess', { notes: notesToPersist }]);
     } catch (err) {
       dispatch(['notes.persistFail', { error: new Error('Failed to store notes. Please try again.') }]);
