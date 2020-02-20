@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import NotesHeader from './home/NotesHeader';
 import NotesList from './home/NotesList';
 import NoteDetails from './home/NoteDetails';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import { ThemeContext } from '../context/ThemeContext';
 import useNotesStorage from '../components/hooks/useNotesStorage';
 import { filterNotes, defineActiveNote } from '../utils/NotesUtil';
@@ -90,35 +88,31 @@ const Home = () => {
   };
 
   return (
-    <div className="container">
-      <Header />
-      <main className="main-notes-container">
-        <div className="left-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
-          <NotesHeader
-            filterTerm={filterTerm}
-            onFilterTermChange={handleFilterTermChange}
-            handleNoteDetailsAdd={handleNoteDetailsAdd}
-            isLoading={isLoading}
-          />
-          <NotesList
-            notes={filteredNotes}
-            handleSetActiveNote={handleSetActiveNote}
-            isLoading={isLoading}
-            error={error}
-            activeNote={activeNote}
-          />
-        </div>
-        <div className="right-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
-          <NoteDetails
-            note={activeNote}
-            handleNoteDetailsChange={handleNoteDetailsChange}
-            handleNoteDelete={handleNoteDelete}
-            ref={textareaElement}
-          />
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <main className="main-notes-container">
+      <div className="left-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
+        <NotesHeader
+          filterTerm={filterTerm}
+          onFilterTermChange={handleFilterTermChange}
+          handleNoteDetailsAdd={handleNoteDetailsAdd}
+          isLoading={isLoading}
+        />
+        <NotesList
+          notes={filteredNotes}
+          handleSetActiveNote={handleSetActiveNote}
+          isLoading={isLoading}
+          error={error}
+          activeNote={activeNote}
+        />
+      </div>
+      <div className="right-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
+        <NoteDetails
+          note={activeNote}
+          handleNoteDetailsChange={handleNoteDetailsChange}
+          handleNoteDelete={handleNoteDelete}
+          ref={textareaElement}
+        />
+      </div>
+    </main>
   );
 };
 
