@@ -17,11 +17,11 @@ function App() {
           <ErrorBoundary>
             <Header />
             <Switch>
-              <Route exact path="/about">
-                <AboutUs />
-              </Route>
               <Route exact path="/">
                 <Home />
+              </Route>
+              <Route exact path="/about">
+                <AboutUs />
               </Route>
               <Route path="*">
                 <NotFound />

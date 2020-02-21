@@ -76,8 +76,8 @@ const Home = () => {
         return;
       }
 
-      const isFirstElementWasDeleted = !prevNote && newNotes.length > 0;
-      if (isFirstElementWasDeleted) {
+      const isFirstNoteWasDeleted = !prevNote && newNotes.length > 0;
+      if (isFirstNoteWasDeleted) {
         setNotes(newNotes);
         setActiveNote(newNotes[0]);
       } else {
