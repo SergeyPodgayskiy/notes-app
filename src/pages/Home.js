@@ -3,8 +3,10 @@ import NotesHeader from './home/NotesHeader';
 import NotesList from './home/NotesList';
 import NoteDetails from './home/NoteDetails';
 import useHomeContainer from './home/useHomeContainer';
+import { ThemeContext } from '../context/ThemeContext';
 
 const Home = () => {
+  const [theme, setTheme] = useContext(ThemeContext);
   const {
     filteredNotes,
     filterTerm,
@@ -12,7 +14,6 @@ const Home = () => {
     activeNote,
     textareaElement,
     error,
-    theme,
     handleFilterTermChange,
     handleNoteDetailsAdd,
     handleSetActiveNote,

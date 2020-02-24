@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ThemeContext } from '../../context/ThemeContext';
 import useNotesStorage from '../../components/hooks/useNotesStorage';
 import { defineActiveNote, filterNotes } from '../../utils/NotesUtil';
 
 const UseHomeContainer = () => {
-  const [theme, setTheme] = useContext(ThemeContext);
   const [notes, setNotes, isLoading, error] = useNotesStorage();
   const [activeNote, setActiveNote] = useState(null);
   const [filterTerm, setFilterTerm] = useState('');
@@ -91,7 +89,6 @@ const UseHomeContainer = () => {
     activeNote,
     textareaElement,
     error,
-    theme,
     handleNoteDetailsAdd,
     handleNoteDetailsChange,
     handleFilterTermChange,
