@@ -17,19 +17,21 @@ function App() {
         <ThemeProvider>
           <ErrorBoundary>
             <Header />
-            <Suspense fallback={<div>Loading. . .</div>}>
-              <Switch>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route exact path="/about">
-                  <AboutUs />
-                </Route>
-                <Route path="*">
-                  <NotFound />
-                </Route>
-              </Switch>
-            </Suspense>
+            <main className="content">
+              <Suspense fallback={<div>Loading. . .</div>}>
+                <Switch>
+                  <Route exact path="/">
+                    <Home />
+                  </Route>
+                  <Route exact path="/about">
+                    <AboutUs />
+                  </Route>
+                  <Route path="*">
+                    <NotFound />
+                  </Route>
+                </Switch>
+              </Suspense>
+            </main>
             <Footer />
           </ErrorBoundary>
         </ThemeProvider>

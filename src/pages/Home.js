@@ -22,7 +22,7 @@ const Home = () => {
   } = useHomeContainer();
 
   return (
-    <main className="main-notes-container">
+    <div className="main-notes-container">
       <div className="left-side-container" style={{ backgroundColor: `${theme.primaryColor}` }}>
         <NotesHeader
           filterTerm={filterTerm}
@@ -46,7 +46,7 @@ const Home = () => {
           ref={textareaElement}
         />
       </div>
-    </main>
+    </div>
   );
 };
 

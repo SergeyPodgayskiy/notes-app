@@ -5,6 +5,21 @@ ul {
   padding: 0;
 }
 
+.container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+main.content {
+  flex: 1 0 auto;
+}
+
+header, footer {
+  flex-shrink: 0;
+}
+
 .header-container {
   display: flex;
   justify-content: space-between;
@@ -35,10 +50,6 @@ ul {
   height: 5vh;
   background-color: #757cd4;
   color: white;
-}
-
-.container {
-  text-align: center;
 }
 
 .main-notes-container {
