@@ -16,16 +16,21 @@ main.content {
   flex: 1 0 auto;
 }
 
-header, footer {
+header {
   flex-shrink: 0;
+  flex-basis: 5vh;
+  position: sticky;
+}
+
+footer {
+  flex-shrink: 0;
+  flex-basis: 5vh;
 }
 
 .header-container {
   display: flex;
   justify-content: space-between;
   background-color: #757cd4;
-  position: sticky;
-  height: 5vh;
   color: white;
 }
 
@@ -46,8 +51,6 @@ header, footer {
 }
 
 .footer-container {
-  background-color: aquamarine;
-  height: 5vh;
   background-color: #757cd4;
   color: white;
 }
