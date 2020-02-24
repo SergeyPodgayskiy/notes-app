@@ -1,7 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Home from './pages/Home';
-import AboutUs from './pages/AboutUs';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NotFound from './pages/NotFound';
 import './App.css';
 import { ThemeProvider } from './context/ThemeContext';
@@ -9,29 +7,34 @@ import ErrorBoundary from './components/errorBoudaries/ErrorBoundary';
 import Footer from './components/Footer';
 import Header from './components/Header';
 
+const Home = lazy(() => import('./pages/Home'));
+const AboutUs = lazy(() => import('./pages/AboutUs'));
+
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <div className="container">
         <ThemeProvider>
           <ErrorBoundary>
             <Header />
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route exact path="/about">
-                <AboutUs />
-              </Route>
-              <Route path="*">
-                <NotFound />
-              </Route>
-            </Switch>
+            <Suspense fallback={<div>Loading. . .</div>}>
+              <Switch>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route exact path="/about">
+                  <AboutUs />
+                </Route>
+                <Route path="*">
+                  <NotFound />
+                </Route>
+              </Switch>
+            </Suspense>
             <Footer />
           </ErrorBoundary>
         </ThemeProvider>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 }
 
