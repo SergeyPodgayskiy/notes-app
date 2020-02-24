@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import NotesHeader from './home/NotesHeader';
 import NotesList from './home/NotesList';
 import NoteDetails from './home/NoteDetails';
-import useHomeContainer from './home/useHomeContainer';
+import useHomeContainer from './home/hooks/useHomeContainer';
 import { ThemeContext } from '../context/ThemeContext';
 
 const Home = () => {

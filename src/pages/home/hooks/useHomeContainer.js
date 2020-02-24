@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import useNotesStorage from '../../components/hooks/useNotesStorage';
-import { defineActiveNote, filterNotes } from '../../utils/NotesUtil';
+import useNotesStorage from '../../../components/hooks/useNotesStorage';
+import { defineActiveNote, filterNotes } from '../../../utils/NotesUtil';
 
 const UseHomeContainer = () => {
   const [notes, setNotes, isLoading, error] = useNotesStorage();
