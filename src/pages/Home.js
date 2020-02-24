@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext } from 'react';
 import NotesHeader from './home/NotesHeader';
 import NotesList from './home/NotesList';
 import NoteDetails from './home/NoteDetails';

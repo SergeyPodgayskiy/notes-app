@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import useNotesStorage from '../../../components/hooks/useNotesStorage';
 import { defineActiveNote, filterNotes } from '../../../utils/NotesUtil';
 
-const UseHomeContainer = () => {
+const useHomeContainer = () => {
   const [notes, setNotes, isLoading, error] = useNotesStorage();
   const [activeNote, setActiveNote] = useState(null);
   const [filterTerm, setFilterTerm] = useState('');
@@ -97,4 +97,4 @@ const UseHomeContainer = () => {
   };
 };
 
-export default UseHomeContainer;
+export default useHomeContainer;
