@@ -38,7 +38,7 @@ function reducer(state = initialState, [type, payload]) {
         error: { ...payload.error },
       };
     default:
-      throw new Error();
+      return state;
   }
 }
 
